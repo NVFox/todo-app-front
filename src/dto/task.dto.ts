@@ -2,8 +2,8 @@ export type TaskDto = {
   id: number,
   title: string,
   description: string|null,
-  dueDate: string,
+  dueDate: string|null,
   status: string
 }
 
-export type CreateTaskDto = Exclude<TaskDto, 'id'>
+export type CreateUpdateTaskDto = Exclude<TaskDto, 'id'>

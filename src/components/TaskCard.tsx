@@ -10,7 +10,9 @@ export type TaskProps = {
 
 export function Task({ task }: TaskProps) {
   const formattedDate = useMemo(() => {
-    return format(task.dueDate, "PPP", { locale: es });
+    return task.dueDate 
+      ? format(task.dueDate, "PPP", { locale: es }) 
+      : "";
   }, [task]);
 
   const localizedStatus = useMemo(() => {

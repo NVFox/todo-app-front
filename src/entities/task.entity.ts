@@ -2,7 +2,7 @@ export type Task = {
   id: number,
   title: string,
   description: string|null,
-  dueDate: Date,
+  dueDate: Date|null,
   status: TaskStatus
 }
 
