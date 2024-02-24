@@ -1,11 +1,4 @@
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -16,23 +9,41 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { DatePicker } from "../ui/date-picker"
+import { 
+  Dialog, 
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  DialogFooter,
+  DialogTrigger
+} from "../ui/dialog"
+import { ReactNode } from "react"
+import { Plus } from "lucide-react"
+import { Textarea } from "../ui/textarea"
 
-export function CreateTaskCard () {
+export type CreateTaskCardProps = {
+  children: ReactNode
+}
+
+export function CreateTaskCard ({ children }: CreateTaskCardProps) {
   return (
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Crear tarea</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form>
+    <Dialog>
+      <DialogTrigger asChild>
+        { children }
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="font-bold text-2xl">Crea una nueva tarea</DialogTitle>
+        </DialogHeader>
+        <form className="py-4">
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="title">Título</Label>
-              <Input id="title" placeholder="Título de tu tarea" />
+              <Input id="title" placeholder="Título de tu tarea" autoComplete="off" />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="due-date">Fecha de vencimiento</Label>
-              <Input id="due-date" placeholder="Selecciona una fecha" />
+              <DatePicker />
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="status">Estado</Label>
@@ -47,16 +58,18 @@ export function CreateTaskCard () {
               </Select>
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="status">Descripción</Label>
-              <DatePicker />
+              <Label htmlFor="description">Descripción</Label>
+              <Textarea id="description" placeholder="Descripción" />
             </div>
           </div>
         </form>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancelar</Button>
-        <Button>Crear</Button>
-      </CardFooter>
-    </Card>
+        <DialogFooter className="flex justify-center">
+          <Button>
+            <Plus />
+            Añadir
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

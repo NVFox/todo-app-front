@@ -1,4 +1,5 @@
 
+import { CreateTaskCard } from "@/components/task/CreateTaskCard";
 import { TaskCard } from "@/components/task/TaskCard";
 import { TaskCardList } from "@/components/task/TaskCardList";
 import { Button } from "@/components/ui/button";
@@ -25,10 +26,12 @@ export function Home() {
           <TaskCard task={task} />
           <TaskCard task={task} />
         </TaskCardList>
-        <Button className="w-1/2 m-auto">
-          <Plus></Plus>
-          Añadir Tarea
-        </Button>
+        <CreateTaskCard>
+          <Button className="w-1/2 m-auto">
+            <Plus></Plus>
+            Añadir Tarea
+          </Button>
+        </CreateTaskCard>
       </section>
     </BaseLayout>
   )
