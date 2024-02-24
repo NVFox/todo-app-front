@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { DatePicker } from "./ui/date-picker"
+import { DatePicker } from "../ui/date-picker"
 
 export function CreateTaskCard () {
   return (
