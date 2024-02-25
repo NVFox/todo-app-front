@@ -1,7 +1,9 @@
 export type PageResponseDto<T> = {
   content: T[],
+  first: boolean,
+  last: boolean,
   size: number,
-  page: number,
+  number: number,
   totalPages: number,
   totalElements: number,
   numberOfElements: number
@@ -14,18 +16,22 @@ export type PageRequestDto = {
 
 export class Page<T> {
   content: T[]
+  first: boolean
+  last: boolean
   size: number
-  page: number
+  number: number
   totalPages: number
   totalElements: number
   numberOfElements: number
 
   constructor(page: PageResponseDto<T>) {
-    this.content = page.content,
-    this.size = page.size,
-    this.page = page.page,
-    this.totalPages = page.totalPages,
-    this.totalElements = page.totalElements,
+    this.content = page.content
+    this.first = page.first
+    this.last = page.last
+    this.size = page.size
+    this.number = page.number
+    this.totalPages = page.totalPages
+    this.totalElements = page.totalElements
     this.numberOfElements = page.numberOfElements
   }
 
