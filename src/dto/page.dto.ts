@@ -35,4 +35,8 @@ export class Page<T> {
       content: this.content.map((item) => callback(item)),
     })
   }
+
+  find(callback: (item: T) => boolean): T | undefined {
+    return this.content.find(callback);
+  }
 }

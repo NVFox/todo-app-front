@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { format } from "date-fns"
 import { es } from "date-fns/locale"
 import { Calendar as CalendarIcon } from "lucide-react"
@@ -13,10 +12,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { ControllerRenderProps } from "react-hook-form"
+import { Task } from "@/entities/task.entity"
 
-export function DatePicker() {
-  const [date, setDate] = React.useState<Date>()
+export type DatePickerProps = {
+  field: ControllerRenderProps<Task, "dueDate">
+}
 
+export function DatePicker({ field }: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -24,11 +27,11 @@ export function DatePicker() {
           variant={"outline"}
           className={cn(
             "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !field.value && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP", {
+          {field.value ? format(field.value, "PPP", {
             locale: es
           }) : <span>Selecciona una fecha</span>}
         </Button>
@@ -36,8 +39,8 @@ export function DatePicker() {
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={date}
-          onSelect={setDate}
+          selected={field.value ?? undefined}
+          onSelect={field.onChange}
           initialFocus
           locale={ es }
         />

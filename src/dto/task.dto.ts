@@ -6,4 +6,4 @@ export type TaskDto = {
   status: string
 }
 
-export type CreateUpdateTaskDto = Exclude<TaskDto, 'id'>
+export type CreateUpdateTaskDto = Omit<TaskDto, 'id'>
