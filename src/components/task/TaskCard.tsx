@@ -1,10 +1,10 @@
 import { type Task, TaskStatus } from "@/entities/task.entity";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { useMemo } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
-import { CalendarIcon, InfoIcon, Pencil, Trash } from "lucide-react";
+import { CalendarIcon, Clock, InfoIcon, Pencil, Trash } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { UpdateTaskCard } from "./UpdateTaskCard";
 import { Button } from "../ui/button";
@@ -19,6 +19,12 @@ export function TaskCard({ task }: TaskProps) {
   const formattedDate = useMemo(() => {
     return task.dueDate 
       ? format(task.dueDate, "PPP", { locale: es }) 
+      : null;
+  }, [task]);
+
+  const standardDate = useMemo(() => {
+    return task.dueDate 
+      ? format(task.dueDate, "dd-MM-yyyy", { locale: es }) 
       : null;
   }, [task]);
 
@@ -49,10 +55,21 @@ export function TaskCard({ task }: TaskProps) {
       <AccordionItem value="item-1">
         <Card className="flex items-center justify-between rounded-b-sm">
           <CardHeader>
-            <article className="flex gap-6 items-center">
+            <section className="flex gap-6 items-center">
               <Checkbox checked={booleanStatus} onCheckedChange={onChecked} />
-              <CardTitle>{ task.title }</CardTitle>
-            </article>
+              <article className="flex flex-col gap-2">
+                <CardTitle>{ task.title }</CardTitle>
+                {
+                  task.dueDate 
+                    ? (
+                      <CardDescription className="flex gap-2 items-center font-semibold">
+                        <Clock size="16"></Clock>
+                        { standardDate }
+                      </CardDescription>
+                    ) : <></>
+                }
+              </article>
+            </section>
           </CardHeader>
           <CardContent className="py-0">
             <AccordionTrigger></AccordionTrigger>

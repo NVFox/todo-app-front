@@ -3,13 +3,16 @@ import { Task } from "@/entities/task.entity"
 import { TaskCard } from "./TaskCard"
 import { Fragment, useMemo } from "react"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
+import { TaskCardSkeleton } from "./loading/TaskCardSkeleton"
+import { NotFoundTasks } from "./loading/NotFoundTasks"
 
 export type TaskCardListProps = {
   paginated: boolean,
+  loading: boolean,
   tasks: Task[] | Page<Task>
 }
 
-export function TaskCardList({ paginated = false, tasks }: TaskCardListProps) {
+export function TaskCardList({ paginated = false, loading = false, tasks }: TaskCardListProps) {
   const taskList = useMemo(() => {
     return tasks instanceof Page 
           ? tasks.content
@@ -49,9 +52,16 @@ export function TaskCardList({ paginated = false, tasks }: TaskCardListProps) {
   return (
     <section className="flex flex-col gap-4">
       { 
-        taskList.map(task => (
-          <TaskCard key={task.id} task={task} />
-        ))
+        loading 
+          ? (
+            Array.from(Array(4), (_, i) => i + 1).map(num => (
+              <TaskCardSkeleton key={"skeleton-" + num} />
+            ))
+          ) 
+          : taskList.length > 0 
+            ? taskList.map(task => (
+              <TaskCard key={task.id} task={task} />
+            )) : <NotFoundTasks />
       }
       {
         showControls
@@ -59,7 +69,7 @@ export function TaskCardList({ paginated = false, tasks }: TaskCardListProps) {
             <Pagination>
               <PaginationContent>
                 <PaginationItem >
-                  <PaginationPrevious isActive={!taskPage.first} />
+                  <PaginationPrevious href={taskPage.first ? undefined : `/${taskPage.number}`} isActive={!taskPage.first} />
                 </PaginationItem>
                 {
                   pageNumbers.map((number) => (
@@ -73,7 +83,7 @@ export function TaskCardList({ paginated = false, tasks }: TaskCardListProps) {
                           ) : <></>
                       }
                       <PaginationItem>
-                        <PaginationLink href={number === taskPage.number + 1 ? '#' : `/${number}`} isActive>{ number }</PaginationLink>
+                        <PaginationLink href={number === taskPage.number + 1 ? undefined : `/${number}`} isActive>{ number }</PaginationLink>
                       </PaginationItem>
                       { 
                         number >= taskPage.number + 3
@@ -87,7 +97,7 @@ export function TaskCardList({ paginated = false, tasks }: TaskCardListProps) {
                   ))
                 }
                 <PaginationItem>
-                  <PaginationNext href="" isActive={!taskPage.last} />
+                  <PaginationNext href={taskPage.last ? undefined : `/${taskPage.number + 2}`} isActive={!taskPage.last} />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

@@ -7,16 +7,16 @@ import { BaseLayout } from "@/layouts/BaseLayout";
 import { Plus } from "lucide-react";
 
 export function Home() {
-  const { data: tasks } = useAllTasks({
+  const { data: tasks, isLoading } = useAllTasks({
     page: 1,
     perPage: 4
   });
 
   return (
     <BaseLayout>
-      <section className="flex flex-col sm:w-4/6 w-3/6 py-8 m-auto gap-8">
+      <section className="flex flex-col sm:w-5/6 md:w-4/6 w-4/6 py-8 m-auto gap-8">
         <h1 className="text-5xl text-center font-bold">Tu Lista de Tareas</h1>
-        <TaskCardList paginated tasks={tasks ?? []}>
+        <TaskCardList paginated tasks={tasks ?? []} loading={isLoading}>
         </TaskCardList>
         <CreateTaskCard>
           <Button className="w-1/2 m-auto">
