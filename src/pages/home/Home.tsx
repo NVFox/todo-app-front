@@ -5,12 +5,24 @@ import { Button } from "@/components/ui/button";
 import { useAllTasks } from "@/hooks/task.hook";
 import { BaseLayout } from "@/layouts/BaseLayout";
 import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export function Home() {
-  const { data: tasks, isLoading } = useAllTasks({
+  const [ params ] = useSearchParams()
+  const [ pageRequest, setPageRequest ] = useState({
     page: 1,
     perPage: 4
-  });
+  })
+
+  useEffect(() => {
+    setPageRequest({
+      page: params.get("pageNumber") ? Number(params.get("pageNumber")) : 1,
+      perPage: params.get("perPage") ? Number(params.get("perPage")) : 4,
+    })
+  }, [params])
+
+  const { data: tasks, isLoading } = useAllTasks(pageRequest);
 
   return (
     <BaseLayout>

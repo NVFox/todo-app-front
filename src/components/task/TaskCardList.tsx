@@ -2,7 +2,7 @@ import { Page } from "@/dto/page.dto"
 import { Task } from "@/entities/task.entity"
 import { TaskCard } from "./TaskCard"
 import { Fragment, useMemo } from "react"
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination"
 import { TaskCardSkeleton } from "./loading/TaskCardSkeleton"
 import { NotFoundTasks } from "./loading/NotFoundTasks"
 
@@ -69,35 +69,19 @@ export function TaskCardList({ paginated = false, loading = false, tasks }: Task
             <Pagination>
               <PaginationContent>
                 <PaginationItem >
-                  <PaginationPrevious href={taskPage.first ? undefined : `/${taskPage.number}`} isActive={!taskPage.first} />
+                  <PaginationPrevious to={`?pageNumber=${taskPage.first ? taskPage.number + 1 : taskPage.number}`} isActive={!taskPage.first} />
                 </PaginationItem>
                 {
                   pageNumbers.map((number) => (
                     <Fragment key={'link-' + number}>
-                      { 
-                        number <= taskPage.number - 1
-                          ? (
-                            <PaginationItem key={'less'}>
-                              <PaginationEllipsis />
-                            </PaginationItem>
-                          ) : <></>
-                      }
                       <PaginationItem>
-                        <PaginationLink href={number === taskPage.number + 1 ? undefined : `/${number}`} isActive>{ number }</PaginationLink>
+                        <PaginationLink to={`?pageNumber=${number}`} isActive>{ number }</PaginationLink>
                       </PaginationItem>
-                      { 
-                        number >= taskPage.number + 3
-                          ? (
-                            <PaginationItem key={'more'}>
-                              <PaginationEllipsis />
-                            </PaginationItem>
-                          ) : <></>
-                      }
                     </Fragment>
                   ))
                 }
                 <PaginationItem>
-                  <PaginationNext href={taskPage.last ? undefined : `/${taskPage.number + 2}`} isActive={!taskPage.last} />
+                  <PaginationNext to={`?pageNumber=${taskPage.last ? taskPage.number + 1 : taskPage.number + 2}`} isActive={!taskPage.last} />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

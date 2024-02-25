@@ -12,11 +12,9 @@ export function TaskMenuHeader() {
         </article>
         <NavigationMenu>
           <NavigationMenuList>
-            <a href="/tasks">
-              <NavigationMenuLink className={ navigationMenuTriggerStyle() } >
-                Mis tareas
-              </NavigationMenuLink>
-            </a>
+            <NavigationMenuLink to="/tasks" className={ navigationMenuTriggerStyle() } >
+              Mis tareas
+            </NavigationMenuLink>
           </NavigationMenuList>
         </NavigationMenu>
       </section>

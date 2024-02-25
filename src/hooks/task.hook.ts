@@ -1,8 +1,8 @@
 import { Task } from "@/entities/task.entity";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskService } from "@/services/task.service";
 import { TaskMapper } from "@/mappers/task.mapper";
-import { Page, PageRequestDto } from "@/dto/page.dto";
+import { PageRequestDto } from "@/dto/page.dto";
 import { useToast } from "@/components/ui/use-toast";
 
 const taskMapper = new TaskMapper();
@@ -10,8 +10,9 @@ const taskService = new TaskService(taskMapper);
 
 export const useAllTasks = (pageRequest?: PageRequestDto) => {
   return useQuery({
-    queryKey: ["todos"],
-    queryFn: () => taskService.getAllTasks(pageRequest)
+    queryKey: ["todos", pageRequest?.page],
+    queryFn: () => taskService.getAllTasks(pageRequest),
+    placeholderData: keepPreviousData
   })
 }
 
@@ -46,13 +47,6 @@ export const useUpdateTask = () => {
 
   return useMutation({
     mutationFn: (task: Task) => taskService.updateTask(task.id ?? 0, taskMapper.taskToCreateUpdateDto(task)),
-    onSuccess: (data, task) => {
-      queryClient.setQueryData(["todos"], (old: Task[] | Page<Task>) => {
-        return old.map(item => {
-          return item.id === task.id ? data : item;
-        })
-      })
-    },
     onSettled: (_data, error) => {
       const { dismiss } = toast({
         variant: error ? "destructive": "default",
@@ -77,11 +71,6 @@ export const useDeleteTask = () => {
 
   return useMutation({
     mutationFn: (id: number) => taskService.deleteTask(id),
-    onSuccess: (_, id) => {
-      queryClient.setQueryData(["todos"], (old: Task[] | Page<Task>) => {
-        return old.filter(item => item.id === id)
-      })
-    },
     onSettled: (_data, error) => {
       const { dismiss } = toast({
         variant: error ? "destructive": "default",
