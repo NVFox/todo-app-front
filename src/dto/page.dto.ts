@@ -42,6 +42,13 @@ export class Page<T> {
     })
   }
 
+  filter(callback: (item: T) => boolean): Page<T> {
+    return new Page({
+      ...this,
+      content: this.content.filter((item) => callback(item)),
+    })
+  }
+
   find(callback: (item: T) => boolean): T | undefined {
     return this.content.find(callback);
   }

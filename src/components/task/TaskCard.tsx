@@ -4,8 +4,12 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { useMemo } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
-import { CalendarIcon, InfoIcon } from "lucide-react";
+import { CalendarIcon, InfoIcon, Pencil, Trash } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
+import { UpdateTaskCard } from "./UpdateTaskCard";
+import { Button } from "../ui/button";
+import { DeleteConfirmationCard } from "./DeleteConfirmationCard";
+import { useUpdateTask } from "@/hooks/task.hook";
 
 export type TaskProps = {
   task: Task
@@ -27,13 +31,26 @@ export function TaskCard({ task }: TaskProps) {
     return localizedStatus[task.status];
   }, [task]);
 
+  const booleanStatus = useMemo(() => {
+    return task.status === TaskStatus.COMPLETED;
+  }, [task])
+
+  const { mutate } = useUpdateTask();
+
+  const onChecked = (checked: boolean) => {
+    mutate({ 
+      ...task, 
+      status: checked ? TaskStatus.COMPLETED : TaskStatus.PENDING 
+    })
+  }
+
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
         <Card className="flex items-center justify-between rounded-b-sm">
           <CardHeader>
             <article className="flex gap-6 items-center">
-              <Checkbox />
+              <Checkbox checked={booleanStatus} onCheckedChange={onChecked} />
               <CardTitle>{ task.title }</CardTitle>
             </article>
           </CardHeader>
@@ -68,6 +85,18 @@ export function TaskCard({ task }: TaskProps) {
                   <p>{ task.description }</p>
                 </section>
               ) : <></> }
+              <section className="flex justify-end gap-4">
+                <UpdateTaskCard task={task}>
+                  <Button className="flex gap-2" size="icon">
+                    <Pencil></Pencil>
+                  </Button>
+                </UpdateTaskCard>
+                <DeleteConfirmationCard id={task.id ?? 0}>
+                  <Button variant="destructive" size="icon">
+                    <Trash></Trash>
+                  </Button>
+                </DeleteConfirmationCard>
+              </section>
             </CardContent>
           </Card>
         </AccordionContent>

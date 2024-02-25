@@ -20,6 +20,12 @@ export function TaskCardList({ paginated = false, tasks }: TaskCardListProps) {
     return tasks as Page<Task>; 
   }, [tasks])
 
+  const showControls = useMemo(() => {
+    if (!taskPage?.content) return false;
+
+    return paginated && taskPage.content.length > 0;
+  }, [taskPage, paginated])
+
   const pageNumbers = useMemo(() => {
     const pageNumber = taskPage.number + 1;
     const { totalPages } = taskPage;
@@ -48,7 +54,7 @@ export function TaskCardList({ paginated = false, tasks }: TaskCardListProps) {
         ))
       }
       {
-        paginated 
+        showControls
           ? (
             <Pagination>
               <PaginationContent>

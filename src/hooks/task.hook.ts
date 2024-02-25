@@ -1,5 +1,4 @@
-import { Task, TaskStatus } from "@/entities/task.entity";
-import { useState } from "react";
+import { Task } from "@/entities/task.entity";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { TaskService } from "@/services/task.service";
 import { TaskMapper } from "@/mappers/task.mapper";
@@ -44,21 +43,18 @@ export const useUpdateTask = () => {
   })
 }
 
-export const useTask = (
-  task: Task = {
-    id: 0,
-    title: "",
-    description: "",
-    dueDate: null,
-    status: TaskStatus.PENDING
-  }
-) => {
-  return useState(task);
-}
+export const useDeleteTask = () => {
+  const queryClient = useQueryClient();
 
-export const useTasks = () => {
-  return {
-    useAllTasks,
-    useTask
-  }
+  return useMutation({
+    mutationFn: (id: number) => taskService.deleteTask(id),
+    onSuccess: (_, id) => {
+      queryClient.setQueryData(["todos"], (old: Task[] | Page<Task>) => {
+        return old.filter(item => item.id === id)
+      })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] })
+    },
+  })
 }

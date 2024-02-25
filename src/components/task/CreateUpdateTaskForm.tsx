@@ -28,12 +28,12 @@ export type CreateUpdateTaskFormProps = {
 export function CreateUpdateTaskForm({ schema, task, useAction, buttons }: CreateUpdateTaskFormProps) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: {...task}
   });
 
   const { mutateAsync } = useAction();
 
   const onSubmit = async (payload: z.infer<typeof schema>) => {
-    alert(JSON.stringify(payload))
     try {
       await mutateAsync({...task, ...payload});
     } catch (error) {
@@ -50,8 +50,8 @@ export function CreateUpdateTaskForm({ schema, task, useAction, buttons }: Creat
   }
 
   return (
-    <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <Form {...form} key={task?.id ?? 0} >
+      <form onSubmit={form.handleSubmit(onSubmit, (data) => alert(JSON.stringify(data)))} className="flex flex-col gap-4">
         <FormField
           control={form.control}
           name="title"
