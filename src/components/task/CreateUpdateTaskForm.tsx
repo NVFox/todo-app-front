@@ -15,6 +15,8 @@ import { Textarea } from "../ui/textarea";
 import { Task } from "@/entities/task.entity";
 import { UseMutationResult } from "@tanstack/react-query";
 import { ReactNode } from "react";
+import { ValidationException } from "@/dto/error.dto";
+import { TaskFields } from "@/dto/task.dto";
 
 export type CreateUpdateTaskFormProps = {
   task?: Task,
@@ -28,15 +30,28 @@ export function CreateUpdateTaskForm({ schema, task, useAction, buttons }: Creat
     resolver: zodResolver(schema),
   });
 
-  const { mutate } = useAction();
+  const { mutateAsync } = useAction();
 
   const onSubmit = async (payload: z.infer<typeof schema>) => {
-    mutate({...task, ...payload});
+    alert(JSON.stringify(payload))
+    try {
+      await mutateAsync({...task, ...payload});
+    } catch (error) {
+      if (error instanceof ValidationException) {
+        error.errors.forEach(e => {
+          e.messages.forEach(message => {
+            form.setError(e.field as TaskFields, {
+              message
+            })
+          })
+        })
+      } 
+    }
   }
 
   return (
     <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit, (tal) => alert(JSON.stringify(tal)))} className="flex flex-col gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <FormField
           control={form.control}
           name="title"
@@ -87,11 +102,14 @@ export function CreateUpdateTaskForm({ schema, task, useAction, buttons }: Creat
         <FormField
           control={form.control}
           name="description"
-          render={({...field}) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Descripción</FormLabel>
               <FormControl>
-                <Textarea id="description" placeholder="Descripción" {...field} />
+                <Textarea 
+                  placeholder="Descripción" {...field} 
+                  value={field.value ? field.value : undefined} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

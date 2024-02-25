@@ -16,7 +16,7 @@ export function Home() {
         <h1 className="text-5xl text-center font-bold">Tu Lista de Tareas</h1>
         <TaskCardList>
           { Array.isArray(tasks) && tasks.map(task => (
-            <TaskCard task={task} />
+            <TaskCard key={task.id} task={task} />
           )) }
         </TaskCardList>
         <CreateTaskCard>

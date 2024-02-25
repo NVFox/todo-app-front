@@ -15,7 +15,7 @@ export function TaskCard({ task }: TaskProps) {
   const formattedDate = useMemo(() => {
     return task.dueDate 
       ? format(task.dueDate, "PPP", { locale: es }) 
-      : "";
+      : null;
   }, [task]);
 
   const localizedStatus = useMemo(() => {
@@ -50,7 +50,7 @@ export function TaskCard({ task }: TaskProps) {
                     <CalendarIcon></CalendarIcon>
                     <h3 className="text-wrap font-semibold">Fecha de vencimiento</h3>
                   </div>
-                  { formattedDate }
+                  { formattedDate ?? "No tiene fecha de vencimiento" }
                 </article>
                 <article className="flex flex-col gap-4 items-center">
                   <div className="flex items-center gap-4">
@@ -60,12 +60,14 @@ export function TaskCard({ task }: TaskProps) {
                   { localizedStatus }
                 </article>
               </section>
-              <section className="flex flex-col gap-4">
-                <header>
-                  <h2 className="text-xl text-wrap font-semibold">Descripción</h2>
-                </header>
-                <p>{ task.description }</p>
-              </section>
+              { task.description ? (
+                <section className="flex flex-col gap-4">
+                  <header>
+                    <h2 className="text-xl text-wrap font-semibold">Descripción</h2>
+                  </header>
+                  <p>{ task.description }</p>
+                </section>
+              ) : <></> }
             </CardContent>
           </Card>
         </AccordionContent>

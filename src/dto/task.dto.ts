@@ -1,3 +1,5 @@
+import { Task } from "@/entities/task.entity"
+
 export type TaskDto = {
   id: number,
   title: string,
@@ -7,3 +9,5 @@ export type TaskDto = {
 }
 
 export type CreateUpdateTaskDto = Omit<TaskDto, 'id'>
+
+export type TaskFields = keyof Task
